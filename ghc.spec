@@ -29,6 +29,8 @@ BuildRequires:   make
 BuildRequires:   perl
 BuildRequires:   python
 BuildRequires:   libffi-devel
+Requires:        gmp
+Requires:        gcc44
 
 %description
 GHC is a state-of-the-art, open source, compiler and interactive environment
