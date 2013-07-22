@@ -29,7 +29,7 @@ BuildRequires:   make
 BuildRequires:   perl
 BuildRequires:   python
 BuildRequires:   libffi-devel
-Requires:        gmp
+Requires:        gmp-devel
 Requires:        gcc44
 
 %description
