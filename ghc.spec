@@ -1,10 +1,9 @@
-#To Build:
-#
+# To Build:
 # sudo yum -y install rpmdevtools gmp-devel && rpmdev-setuptree
-# sudo yum -y install gmp-devel glibc-devel ncurses-devel gmp-devel automake libtool gcc44 make perl python libffi-devel ghc-bootstrap-compiler7
-# wget http://www.haskell.org/ghc/dist/7.6.3/ghc-7.6.3-src.tar.bz2 -O ~/rpmbuild/SOURCES/ghc-7.6.3-src.tar.bz2
-# wget https://raw.github.com/nmilford/rpm-ghc/master/ghc.spec -O ~/rpmbuild/SPECS/ghc.spec
-# rpmbuild -bb ~/rpmbuild/SPECS/ghc.spec
+# sudo yum -y install gmp-devel glibc-devel ncurses-devel  gmp-devel automake libtool gcc44 make  perl python libffi-devel ghc-bootstrap-compiler7
+# wget http://www.haskell.org/ghc/dist/7.0.2/ghc-7.0.2-src.tar.bz2 -O ~/rpmbuild/SOURCES/ghc-7.0.2-src.tar.bz2
+# wget https://raw.github.com/nmilford/rpm-ghc-bootsrap-compiler7/master/ghc-bootsrap-compiler7.spec -O ~/rpmbuild/SPECS/ghc-bootsrap-compiler7.spec
+# rpmbuild -bb ~/rpmbuild/SPECS/ghc-bootsrap-compiler7.spec
 
 %define ghc_bootstrap_ver 7.0.2
 %define ghc_bootstrap_pkg ghc-bootstrap-compiler7
@@ -66,6 +65,19 @@ install -d -m 755 %{buildroot}/usr/
 install -d -m 755 %{buildroot}/usr/share/doc/ghc-%{version}
 install    -m 644 %{_builddir}/ghc-%{version}/README  %{buildroot}/usr/share/doc/ghc-%{version}
 install    -m 644 %{_builddir}/ghc-%{version}/LICENSE %{buildroot}/usr/share/doc/ghc-%{version}
+
+for file in ghc-%{version} ghci-%{version} ghc-pkg-%{version} haddock-ghc-%{version} hp2ps hpc hsc2hs runghc-%{version}; do
+  sed -i -e  's|%{buildroot}||g' %{buildroot}%{_bindir}/$file
+done
+
+cd %{buildroot}/%{_libdir}/ghc-%{version}/package.conf.d/
+for pkg in *; do
+  sed -i -e  's|%{buildroot}||g' $pkg
+done
+cd -
+
+%post
+%{_bindir}/ghc-pkg-%{version} recache
 
 %files
 %defattr(-,root,root)
